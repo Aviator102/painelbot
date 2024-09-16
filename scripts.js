@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const settingsForm = document.getElementById('settings-form');
     const messagesForm = document.getElementById('messages-form');
+    const addBotButton = document.getElementById('addBotButton');
+    const statusMessage = document.getElementById('statusMessage');
 
     settingsForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -46,5 +48,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         alert('Mensagem adicionada com sucesso!');
+    });
+
+    addBotButton.addEventListener('click', async () => {
+        const botToken = document.getElementById('botToken').value;
+
+        try {
+            const response = await fetch('/api/test-bot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ botToken }),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                statusMessage.textContent = 'Bot adicionado com sucesso!';
+            } else {
+                statusMessage.textContent = `Erro: ${result.message}`;
+            }
+        } catch (error) {
+            statusMessage.textContent = 'Erro ao conectar com o bot.';
+        }
     });
 });
