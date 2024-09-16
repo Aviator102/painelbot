@@ -1,71 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Administração do Bot</title>
+    <title>Painel Administrativo</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Painel de Administração do Bot</h1>
-        
-        <!-- Configurações do Bot -->
-        <section class="config-section">
-            <h2>Configurações do Bot</h2>
-            <form id="botConfigForm">
-                <label for="botToken">Token do Bot:</label>
-                <input type="text" id="botToken" name="botToken" required>
+    <h1>Painel Administrativo do Bot do Telegram</h1>
+    
+    <form id="settings-form">
+        <h2>Configurações do Bot</h2>
+        <label for="botToken">Token do Bot:</label>
+        <input type="text" id="botToken" name="botToken" required><br>
 
-                <label for="groupId">ID do Grupo:</label>
-                <input type="text" id="groupId" name="groupId" required>
+        <label for="groupId">ID do Grupo:</label>
+        <input type="text" id="groupId" name="groupId" required><br>
 
-                <button type="submit">Salvar Configurações</button>
-            </form>
-        </section>
+        <h2>Conteúdo</h2>
+        <label for="greeting">Saudação:</label>
+        <input type="text" id="greeting" name="greeting"><br>
 
-        <!-- Mensagens Automáticas -->
-        <section class="messages-section">
-            <h2>Mensagens Automáticas</h2>
-            <form id="messageForm">
-                <label for="message">Nova Mensagem:</label>
-                <input type="text" id="message" name="message" required>
-                
-                <label for="scheduleTime">Tempo de Envio (em minutos):</label>
-                <input type="number" id="scheduleTime" name="scheduleTime" min="1" required>
+        <label for="advertisement">Propaganda:</label>
+        <input type="text" id="advertisement" name="advertisement"><br>
 
-                <button type="submit">Adicionar Mensagem</button>
-            </form>
+        <label for="alert">Aviso:</label>
+        <input type="text" id="alert" name="alert"><br>
 
-            <div id="messageList">
-                <!-- Mensagens automáticas serão listadas aqui -->
-            </div>
-        </section>
+        <button type="submit">Salvar Configurações</button>
+    </form>
 
-        <!-- Saudação, Propaganda e Avisos -->
-        <section class="content-section">
-            <h2>Conteúdo do Bot</h2>
-            <form id="contentForm">
-                <label for="greeting">Saudação:</label>
-                <input type="text" id="greeting" name="greeting" required>
+    <h2>Mensagens Automáticas</h2>
+    <form id="messages-form">
+        <label for="message">Mensagem:</label>
+        <textarea id="message" name="message" rows="4" cols="50"></textarea><br>
 
-                <label for="advertisement">Propaganda:</label>
-                <input type="text" id="advertisement" name="advertisement">
+        <label for="scheduleTime">Horário de Agendamento:</label>
+        <input type="datetime-local" id="scheduleTime" name="scheduleTime"><br>
 
-                <label for="alert">Aviso:</label>
-                <input type="text" id="alert" name="alert">
+        <button type="submit">Adicionar Mensagem</button>
+    </form>
 
-                <button type="submit">Salvar Conteúdo</button>
-            </form>
-        </section>
-
-        <!-- Controle de Bot -->
-        <section class="control-section">
-            <h2>Controle do Bot</h2>
-            <button id="startBot">Iniciar Bot</button>
-            <button id="stopBot">Parar Bot</button>
-        </section>
-    </div>
     <script src="scripts.js"></script>
 </body>
 </html>
