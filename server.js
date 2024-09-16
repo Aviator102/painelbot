@@ -1,44 +1,44 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const sqlite3 = require('sqlite3').verbose();
-const cors = require('cors');
+const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
 app.use(bodyParser.json());
 
-// Configurar banco de dados SQLite
-const db = new sqlite3.Database('./database.db');
+// Variáveis de ambiente
+const BASEROW_API_URL = 'https://api.baserow.io/api/database/rows/table/<TABLE_ID>/'; // Substitua <TABLE_ID> pelo ID da tabela
+const BASEROW_API_KEY = 'YOUR_BASEROW_API_KEY'; // Substitua pela sua chave de API do Baserow
 
-db.serialize(() => {
-    db.run("CREATE TABLE IF NOT EXISTS config (botToken TEXT, groupId TEXT)");
-    db.run("CREATE TABLE IF NOT EXISTS messages (text TEXT, scheduleTime INTEGER)");
-    db.run("CREATE TABLE IF NOT EXISTS content (greeting TEXT, advertisement TEXT, alert TEXT)");
-});
+// Configurar os headers para o Baserow
+const headers = {
+    'Authorization': `Token ${BASEROW_API_KEY}`,
+    'Content-Type': 'application/json'
+};
 
 // Endpoint para salvar configurações
-app.post('/api/config', (req, res) => {
-    const { botToken, groupId } = req.body;
-    db.run("DELETE FROM config");
-    db.run("INSERT INTO config (botToken, groupId) VALUES (?, ?)", [botToken, groupId], (err) => {
-        if (err) {
-            res.status(500).send('Erro ao salvar configurações');
-        } else {
-            res.status(200).send('Configurações salvas');
-        }
-    });
+app.post('/api/config', async (req, res) => {
+    const { botToken, groupId, greeting, advertisement, alert } = req.body;
+    try {
+        await axios.post(`${BASEROW_API_URL}/bots/`, { bot_token: botToken, group_id: groupId }, { headers });
+        await axios.post(`${BASEROW_API_URL}/content/`, { greeting, advertisement, alert }, { headers });
+        res.status(200).send('Configurações salvas');
+    } catch (error) {
+        res.status(500).send('Erro ao salvar configurações');
+    }
 });
 
-// Endpoint para obter configurações
-app.get('/api/config', (req, res) => {
-    db.get("SELECT * FROM config", (err, row) => {
-        if (err) {
-            res.status(500).send('Erro ao obter configurações');
-        } else {
-            res.json(row);
-        }
-    });
+// Endpoint para adicionar mensagens automáticas
+app.post('/api/messages', async (req, res) => {
+    const { message, scheduleTime } = req.body;
+    try {
+        await axios.post(`${BASEROW_API_URL}/messages/`, { message, schedule_time: scheduleTime }, { headers });
+        res.status(200).send('Mensagem adicionada');
+    } catch (error) {
+        res.status(500).send('Erro ao adicionar mensagem');
+    }
 });
 
-// Endpoint para adicionar mensagens
+app.listen(port, () => {
+    console.log(`Servidor ouvindo na porta ${port}`);
+});
